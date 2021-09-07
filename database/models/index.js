@@ -10,7 +10,30 @@ const AuthorSchema = new mongoose.Schema({
         required: true,
         enum: ['BEST_SELLER', 'RISING', 'NEW']
     },
-    books: [{}],
+    books: [{
+        title: {
+            type: String
+        },
+        desc: {
+            type: String
+        },
+        content: {
+            type: String
+        },
+        image: {
+            type: String
+        },
+        audio: {
+            type: String
+        },
+        price: {
+            type: String
+        }, 
+        date_added: {
+            type: Date,
+            default: Date.now
+        }
+    }],
     market_tag: {
         type: String,
         enum: ['FEATURED', 'SELLING_FAST', 'INTERESTING']
@@ -26,4 +49,5 @@ const AuthorSchema = new mongoose.Schema({
     }
 })
 
-module.exports = AuthorSchema = mongoose.model("authors", AuthorSchema)
+const Authors = mongoose.model("authors", AuthorSchema)
+module.exports = Authors

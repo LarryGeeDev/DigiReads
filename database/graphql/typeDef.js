@@ -2,8 +2,7 @@ const { gql } = require("apollo-server-express")
 
 const typeDef = gql`
     type Query {
-        hello(greet: String): String
-        getAuthors(limit: Int): Author
+        getAuthors(limit: Int): [Author]
   }
   type Author {
       id: String
