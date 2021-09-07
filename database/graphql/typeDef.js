@@ -7,11 +7,30 @@ const typeDef = gql`
   }
   type Mutation {
       deleteAuthor(id: String!): Author
-      createNewAuthor(input: AuthorInput!): Author
+      createNewAuthor(input: AuthorInput!, userId: String!): Author
       updateAuthor(id: String!, input: UpdateInput!): Author
+
+      createNewUser(input: UserInput!): User
+      login(email: String!, password: String!): User
+      updateUser(id: String!, input: UpdUserInput!): User
+  }
+  type Token {
+    token: String!
+  }
+  type User {
+    id: String
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNo: String
+    user_category: UserCat!
+    profile_pic: String
+    date_created: String
+    token: Token!
   }
   type Author {
       id: String
+      user_id: String!
       name: String!
       status: AuthorStatus!,
       books: [Book]
@@ -29,8 +48,25 @@ const typeDef = gql`
     date_added: String
     image: String
   }
+  input UserInput {
+    firstName: String!
+    lastName: String!
+    email: String!
+    phoneNo: String
+    user_category: UserCat!
+    profile_pic: String
+  }
+  input UpdUserInput {
+    firstName: String
+    lastName: String
+    email: String
+    phoneNo: String
+    user_category: UserCat
+    profile_pic: String
+  }
   input AuthorInput {
     name: String!
+    user_id: String!
     books: [BookInput]
     market_tag: MarketTag,
     author_bio: String
@@ -59,6 +95,10 @@ const typeDef = gql`
       FEATURED,
       SELLING_FAST,
       INTERESTING
+  }
+  enum UserCat {
+    READER,
+    AUTHOR
   }
 `
 

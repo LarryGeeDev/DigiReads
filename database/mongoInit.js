@@ -3,7 +3,7 @@ const logger = require("../logger")
 
 require("dotenv").config()
 
-const uri = process.env.MONGO_U
+const uri = process.env.MONGO_URI
 
 
 async function dbInitialize() {

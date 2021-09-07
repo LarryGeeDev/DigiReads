@@ -1,12 +1,12 @@
-const Authors = require("../models");
+const Authors = require("../models/authorSchema");
+const User = require("../models/userSchema");
 
 const root = {
   Query: {
     // get all authors
-    getAuthors: (_, args, __, ___) =>
+    getAuthors: (_, args, context, ___) =>
       new Promise((resolve, reject) => {
         const limit = args.limit || null;
-        console.log(limit);
         Authors.find()
           .limit(limit)
           .sort("desc")
@@ -43,6 +43,7 @@ const root = {
         const newDoc = {
             name: args.input.name,
             status: args.input.status,
+            user_id: args.userId,
             books: args.input.books,
             market_tag: args.market_tag,
             author_bio: args.input.author_bio,
@@ -65,8 +66,13 @@ const root = {
             .then(doc => resolve(doc))
             .catch(err => reject(err))
         })
+    },
+
+    // create (register) user
+    createNewUser: (parent, args, context, info) => {
+      
     }
-  },
+  }
 };
 
 module.exports = root;
