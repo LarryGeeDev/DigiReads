@@ -14,9 +14,7 @@ const typeDef = gql`
       login(email: String!, password: String!): User
       updateUser(id: String!, input: UpdUserInput!): User
   }
-  type Token {
-    token: String!
-  }
+
   type User {
     id: String
     firstName: String!
@@ -26,7 +24,7 @@ const typeDef = gql`
     user_category: UserCat!
     profile_pic: String
     date_created: String
-    token: Token!
+    token: String!
   }
   type Author {
       id: String
@@ -55,6 +53,7 @@ const typeDef = gql`
     phoneNo: String
     user_category: UserCat!
     profile_pic: String
+    password: String!
   }
   input UpdUserInput {
     firstName: String

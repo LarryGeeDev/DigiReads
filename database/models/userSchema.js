@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
     profile_pic: {
         type: String,
     },
+    password: {
+        type: String,
+        maxlength: 2048
+    },
     date_created: {
         type: Date,
         default: Date.now
