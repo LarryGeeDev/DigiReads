@@ -4,8 +4,7 @@ const cookieSession = require("cookie-session");
 
 const { SECRET_KEY_SESSION } = require("./app.config");
 const { getPortNo } = require("./helpers");
-const { AUTHORS } = require("./routes/constants");
-const router = require("./routes/authors");
+
 const Server = require("./database/graphqlInit");
 const dbInitialize = require("./database/mongoInit");
 const logger = require("./logger");

@@ -1,0 +1,2 @@
+{"message":"We are live at: 4000","level":"info"}
+{"message":"An error occured while connecting to DB: MongooseError: The `uri` parameter to `openUri()` must be a string, got \"undefined\". Make sure the first parameter to `mongoose.connect()` or `mongoose.createConnection()` is a string.","level":"error"}

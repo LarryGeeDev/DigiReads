@@ -3,7 +3,10 @@ const winston = require("winston");
 // logger
 const logger = winston.createLogger({
   level: "info",
-  transports: [new winston.transports.File({ filename: "logs/error.log", level: "error" })],
+  transports: [
+    new winston.transports.File({ filename: "logs/error.log", level: "error" }),
+    new winston.transports.File({ filename: 'logs/info.log', level: 'info' })
+],
 });
 if (process.env.NODE_ENV !== "production") {
   // log to console if we are not in production
