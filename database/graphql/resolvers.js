@@ -2,7 +2,7 @@ const Authors = require("../models/authorSchema");
 const User = require("../models/userSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { verifyToken } = require("../../helpers");
+const { verifyToken, storeFS } = require("../../helpers");
 
 require("dotenv").config();
 
@@ -56,10 +56,9 @@ const root = {
         name: args.input.name,
         status: args.input.status,
         user_id: args.userId,
-        books: args.input.books,
+        books: storeFS(args.input.books), // save image in books object
         market_tag: args.market_tag,
         author_bio: args.input.author_bio,
-        date_created: Date.now(),
       };
       return new Promise((resolve, reject) => {
         // check if user_id exists before saving
@@ -86,6 +85,32 @@ const root = {
           .then((doc) => resolve(doc))
           .catch((err) => reject(err));
       });
+    },
+
+    // Update Book list for Author
+    updateBookList: (_, args, context, ___) => {
+      verifyToken(context.headerAuth); // authenticate and authorize token
+      
+      return new Promise((resolve, reject) => {
+        // Look for author
+        Authors.findById(args.author_id)
+              .then(doc => {
+                if (!doc) return reject(new Error("No Author with that id exists"))
+                // Author exists, push to books []
+                Authors.updateOne(
+                  {_id: doc._id},
+                  {
+                    $push: {
+                      books: args.input
+                    }
+                  }
+                ).then(res => {
+                  resolve("Updated: Success")
+                })
+                .catch(err => reject(new Error(err)))
+              })
+              .catch(err => reject(err))
+      })
     },
 
     createNewUser: (_, args, __, ___) => {
@@ -174,6 +199,8 @@ const root = {
         });
       });
     },
+
+
   },
 };
 

@@ -9,6 +9,7 @@ const typeDef = gql`
       deleteAuthor(id: String!): Author
       createNewAuthor(input: AuthorInput!, userId: String!): Author
       updateAuthor(id: String!, input: UpdateInput!): Author
+      updateBookList(author_id: String!, input: BookInput!): String
 
       createNewUser(input: UserInput!): User
       login(email: String!, password: String!): User
@@ -31,19 +32,26 @@ const typeDef = gql`
       user_id: String!
       name: String!
       status: AuthorStatus!,
-      books: [Book]
+      books: [Book]!
       market_tag: MarketTag,
       author_bio: String
       date_created: String
   }
   type Book {
-    id: String!
     title: String
     desc: String
     content: String
     audio: String
     price: String
     date_added: String
+    image: String
+  }
+  input BookInput {
+    title: String!
+    desc: String!
+    content: String!
+    audio: String
+    price: String!
     image: String
   }
   input UserInput {
@@ -73,16 +81,6 @@ const typeDef = gql`
   input UpdateInput {
     name: String
     author_bio: String
-  }
-  input BookInput {
-    id: String!
-    title: String!
-    desc: String!
-    content: String!
-    audio: String
-    price: String!
-    date_added: String!
-    image: String
   }
   enum AuthorStatus {
       BEST_SELLER,
