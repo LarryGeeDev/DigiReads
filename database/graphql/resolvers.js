@@ -1,16 +1,16 @@
-const { generateToken } = require("../../helpers/token");
 const Authors = require("../models/authorSchema");
 const User = require("../models/userSchema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const { verifyToken } = require("../../helpers");
 
 require("dotenv").config();
 
 const root = {
   Query: {
     // get all authors
-    getAuthors: (_, args, context, ___) =>
-      new Promise((resolve, reject) => {
+    getAuthors: (_, args, context, ___) => {
+      return new Promise((resolve, reject) => {
         const limit = args.limit || null;
         Authors.find()
           .limit(limit)
@@ -25,18 +25,23 @@ const root = {
               )
             )
           );
-      }),
+      });
+    },
     // get a author
-    getAuthor: (_, args, __, ___) =>
-      new Promise((resolve, reject) => {
+    getAuthor: (_, args, __, ___) => {
+      return new Promise((resolve, reject) => {
         Authors.findById(args.id)
-          .then((doc) => resolve(doc))
+          .then((doc) => {
+            resolve(doc);
+          })
           .catch((err) => reject(err));
-      }),
+      });
+    },
   },
   Mutation: {
     // delete an author
-    deleteAuthor: (_, args, __, ___) => {
+    deleteAuthor: (_, args, context, ___) => {
+      verifyToken(context.headerAuth); // authenticate and authorize token
       return new Promise((resolve, reject) => {
         Authors.findByIdAndDelete(args.id)
           .then((result) => resolve(result))
@@ -44,7 +49,9 @@ const root = {
       });
     },
     // create an author
-    createNewAuthor: (_, args, __, ___) => {
+    createNewAuthor: (_, args, context, ___) => {
+      verifyToken(context.headerAuth); // authenticate and authorize token
+
       const newDoc = {
         name: args.input.name,
         status: args.input.status,
@@ -55,6 +62,12 @@ const root = {
         date_created: Date.now(),
       };
       return new Promise((resolve, reject) => {
+        // check if user_id exists before saving
+        Authors.find({ user_id: args.userId }, (err, doc) => {
+          if (err) return reject(err);
+          if (!doc.length)
+            return reject(new Error("This user id does not exists"));
+        });
         new Authors(newDoc)
           .save()
           .then((doc) => resolve(doc))
@@ -62,7 +75,8 @@ const root = {
       });
     },
     // update an author
-    updateAuthor: (_, args, __, ___) => {
+    updateAuthor: (_, args, context, ___) => {
+      verifyToken(context.headerAuth); // authenticate and authorize token
       const updatedAuthor = {
         name: args.input.name,
         author_bio: args.input.author_bio,
@@ -89,7 +103,9 @@ const root = {
         User.find({ email: input.email }, (err, doc) => {
           if (err) throw err;
           if (doc.length)
-            return reject(new Error("A user with that email address already exists!"));
+            return reject(
+              new Error("A user with that email address already exists!")
+            );
         });
         // hash password
         bcrypt.genSalt(10, (err, salt) => {
@@ -135,11 +151,11 @@ const root = {
 
           // user found, compare password
           bcrypt.compare(args.password, doc.password, (err, res) => {
-            if (err) throw err
-            if (!res) return reject(new Error("Password mismatched"))
+            if (err) throw err;
+            if (!res) return reject(new Error("Password mismatched"));
 
-             // generate JWT
-             let token = jwt.sign({ id: doc._id }, process.env.JWT_SECRET, {
+            // generate JWT
+            let token = jwt.sign({ id: doc._id }, process.env.JWT_SECRET, {
               expiresIn: "1h",
             });
             const response = {
@@ -154,8 +170,7 @@ const root = {
               token: token,
             };
             return resolve(response);
-          })
-              
+          });
         });
       });
     },

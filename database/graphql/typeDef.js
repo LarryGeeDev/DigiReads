@@ -65,7 +65,6 @@ const typeDef = gql`
   }
   input AuthorInput {
     name: String!
-    user_id: String!
     books: [BookInput]
     market_tag: MarketTag,
     author_bio: String
