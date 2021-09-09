@@ -49,14 +49,13 @@ const root = {
       });
     },
     // create an author
-    createNewAuthor: (_, args, context, ___) => {
+    createNewAuthor: async (_, args, context, ___) => {
       verifyToken(context.headerAuth); // authenticate and authorize token
-
       const newDoc = {
         name: args.input.name,
         status: args.input.status,
         user_id: args.userId,
-        books: storeFS(args.input.books), // save image in books object
+        books: await storeFS(args.input.books, args.file), // save image in books object
         market_tag: args.market_tag,
         author_bio: args.input.author_bio,
       };
@@ -88,29 +87,34 @@ const root = {
     },
 
     // Update Book list for Author
-    updateBookList: (_, args, context, ___) => {
+    updateBookList: async (_, args, context, ___) => {
       verifyToken(context.headerAuth); // authenticate and authorize token
-      
+
+      // compile books object, first
+      var bookObj = await storeFS(args.input, args.file);
+
       return new Promise((resolve, reject) => {
         // Look for author
         Authors.findById(args.author_id)
-              .then(doc => {
-                if (!doc) return reject(new Error("No Author with that id exists"))
-                // Author exists, push to books []
-                Authors.updateOne(
-                  {_id: doc._id},
-                  {
-                    $push: {
-                      books: args.input
-                    }
-                  }
-                ).then(res => {
-                  resolve("Updated: Success")
-                })
-                .catch(err => reject(new Error(err)))
+          .then((doc) => {
+            if (!doc) return reject(new Error("No Author with that id exists"));
+            // Author exists, push to books []
+
+            Authors.updateOne(
+              { _id: doc._id },
+              {
+                $push: {
+                  books: bookObj,
+                },
+              }
+            )
+              .then((res) => {
+                resolve("Updated: Success");
               })
-              .catch(err => reject(err))
-      })
+              .catch((err) => reject(new Error(err)));
+          })
+          .catch((err) => reject(err));
+      });
     },
 
     createNewUser: (_, args, __, ___) => {
@@ -199,8 +203,6 @@ const root = {
         });
       });
     },
-
-
   },
 };
 
