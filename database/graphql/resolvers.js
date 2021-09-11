@@ -169,10 +169,12 @@ const root = {
       });
     },
     login: (parent, args, context, info) => {
-      // simple validation
-      if (!args.email || !args.password)
-        return new Error("All fields are required!");
+      
       return new Promise((resolve, reject) => {
+        // simple validation
+        if (!args.email || !args.password)
+          return reject("All fields are required!");
+
         User.findOne({ email: args.email }, (err, doc) => {
           if (err) throw err;
           if (!doc)
