@@ -12,9 +12,10 @@ const root = {
     getAuthors: (_, args, context, ___) => {
       return new Promise((resolve, reject) => {
         const limit = args.limit || null;
+        const order = args.order === "DESC" ? -1 : 1
         Authors.find()
           .limit(limit)
-          .sort("desc")
+          .sort({ date_created: order })
           .then((collection) => {
             resolve(collection);
           })

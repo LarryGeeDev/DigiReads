@@ -2,7 +2,7 @@ const { gql } = require("apollo-server-express")
 
 const typeDef = gql`
     type Query {
-        getAuthors(limit: Int): [Author]
+        getAuthors(limit: Int, order: Order!): [Author]
         getAuthor(id: String!): Author
   }
   type Mutation {
@@ -95,6 +95,10 @@ const typeDef = gql`
   enum UserCat {
     READER,
     AUTHOR
+  }
+  enum Order {
+    ASC,
+    DESC
   }
 `
 
