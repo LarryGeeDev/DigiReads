@@ -57,7 +57,6 @@ const root = {
         status: args.input.status,
         user_id: args.userId,
         books: await storeFS(args.input.books, args.file), // save image in books object
-        market_tag: args.market_tag,
         author_bio: args.input.author_bio,
       };
       return new Promise((resolve, reject) => {

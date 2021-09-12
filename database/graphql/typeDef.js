@@ -33,7 +33,6 @@ const typeDef = gql`
       name: String!
       status: AuthorStatus!,
       books: [Book]!
-      market_tag: MarketTag,
       author_bio: String
       date_created: String
   }
@@ -45,6 +44,7 @@ const typeDef = gql`
     price: String
     date_added: String
     image: String
+    market_tag: MarketTag
   }
   input BookInput {
     title: String!
@@ -53,6 +53,7 @@ const typeDef = gql`
     audio: String
     price: String!
     image: String
+    market_tag: MarketTag
   }
   input UserInput {
     firstName: String!
@@ -74,7 +75,6 @@ const typeDef = gql`
   input AuthorInput {
     name: String!
     books: [BookInput]
-    market_tag: MarketTag,
     author_bio: String
     status: AuthorStatus!
   }
