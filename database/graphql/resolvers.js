@@ -200,12 +200,12 @@ const root = {
         User.findOne({ email: args.email }, (err, doc) => {
           if (err) throw err;
           if (!doc)
-            return reject(new Error("No user exists with the provided email"));
+            return reject(new Error("Email or password is incorrect!"));
 
           // user found, compare password
           bcrypt.compare(args.password, doc.password, (err, res) => {
             if (err) throw err;
-            if (!res) return reject(new Error("Password mismatched"));
+            if (!res) return reject(new Error("Email or password is incorrect!"));
 
             // generate JWT
             let token = jwt.sign({ id: doc._id }, process.env.JWT_SECRET, {
