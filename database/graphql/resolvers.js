@@ -12,7 +12,7 @@ const root = {
     getAuthors: (_, args, context, ___) => {
       return new Promise((resolve, reject) => {
         const limit = args.limit || null;
-        const order = args.order === "DESC" ? -1 : 1
+        const order = args.order === "DESC" ? -1 : 1;
         Authors.find()
           .limit(limit)
           .sort({ date_created: order })
@@ -37,6 +37,29 @@ const root = {
           })
           .catch((err) => reject(err));
       });
+    },
+    getBooks: (parent, args, context, info) => {
+      return new Promise((resolve, reject) => {
+        // sort and favour rising authors and best_sellers
+        Authors.find({ "status": {$in : ["RISING", "BEST_SELLER"] }}, { books: 1 }).sort({ "date_created": 1 })
+            .then(doc => {
+              return resolve(doc[0].books)
+            })
+            .catch(err => reject(err))
+      })
+      
+
+    },
+    getBookDetails: (parent, args, context, info) => {
+      var bookId = args.id
+      return new Promise((resolve, reject) => {
+        Authors.find({ "books._id": { $eq: bookId } }, { books: 1 })
+              .then(doc => {
+                const foundBook = doc[0].books.filter(book => book.id === bookId)
+                resolve(foundBook[0])
+              })
+              .catch(err => reject(err))
+      })
     },
   },
   Mutation: {
@@ -169,7 +192,6 @@ const root = {
       });
     },
     login: (parent, args, context, info) => {
-      
       return new Promise((resolve, reject) => {
         // simple validation
         if (!args.email || !args.password)
