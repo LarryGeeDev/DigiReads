@@ -10,6 +10,10 @@ const AuthorSchema = new mongoose.Schema({
         required: true,
         enum: ['BEST_SELLER', 'RISING', 'NEW']
     },
+    verified: {
+        type: Boolean,
+        default: false
+    },
     user_id: {
         type: String,
         required: true

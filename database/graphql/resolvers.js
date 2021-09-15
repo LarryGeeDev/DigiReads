@@ -79,8 +79,8 @@ const root = {
         name: args.input.name,
         status: args.input.status,
         user_id: args.userId,
-        books: await storeFS(args.input.books, args.file), // save image in books object
         author_bio: args.input.author_bio,
+        verified: true
       };
       return new Promise((resolve, reject) => {
         // check if user_id exists before saving

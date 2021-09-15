@@ -28,6 +28,10 @@ const userSchema = new mongoose.Schema({
         type: String,
         maxlength: 2048
     },
+    email_verified: {
+        type: Boolean,
+        default: false
+    },
     date_created: {
         type: Date,
         default: Date.now

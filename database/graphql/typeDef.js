@@ -28,6 +28,7 @@ const typeDef = gql`
     profile_pic: String
     date_created: String
     token: String!
+    email_verified: Boolean!
   }
   type Author {
       id: String
@@ -37,6 +38,7 @@ const typeDef = gql`
       books: [Book]!
       author_bio: String
       date_created: String
+      verified: Boolean!
   }
   type Book {
     id: String

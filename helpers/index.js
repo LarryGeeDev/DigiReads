@@ -9,7 +9,7 @@ function getPortNo(array) {
 }
 
 function verifyToken(token) {
-    if (!token) reject(new Error("Authorization header not set"))
+    if (!token) throw new Error("Authorization header not set")
         // if token, verify if correct
     try {
         let strippedToken = token.replace(/Bearer\s+/, '')  // replace Bearer + \s with ""
