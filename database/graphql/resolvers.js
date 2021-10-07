@@ -38,6 +38,16 @@ const root = {
           .catch((err) => reject(err));
       });
     },
+    // get a user
+    getUser: (_, args, __, ___) => {
+      return new Promise((resolve, reject) => {
+        User.findById(args.id)
+          .then((doc) => {
+            resolve(doc);
+          })
+          .catch((err) => reject(err));
+      });
+    },
     getBooks: (parent, args, context, info) => {
       return new Promise((resolve, reject) => {
         // sort and favour rising authors and best_sellers
