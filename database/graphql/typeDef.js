@@ -7,6 +7,7 @@ const typeDef = gql`
         getBookDetails(id: String!): Book
         getBooks(limit: Int): [Book]
         getUser(id: String!): User
+        getAuthorWithUserId(id: String!): Author
   }
   type Mutation {
       deleteAuthor(id: String!): Author
@@ -39,7 +40,7 @@ const typeDef = gql`
       books: [Book]!
       author_bio: String
       date_created: String
-      verified: Boolean!
+      verified: Boolean
   }
   type Book {
     id: String

@@ -38,6 +38,16 @@ const root = {
           .catch((err) => reject(err));
       });
     },
+    // get a author with user id
+    getAuthorWithUserId: (_, args, __, ___) => {
+      return new Promise((resolve, reject) => {
+        Authors.findOne({ user_id: args.id })
+          .then((doc) => {
+            resolve(doc);
+          })
+          .catch((err) => reject(err));
+      });
+    },
     // get a user
     getUser: (_, args, __, ___) => {
       return new Promise((resolve, reject) => {
